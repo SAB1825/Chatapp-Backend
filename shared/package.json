@@ -1,0 +1,22 @@
+{
+  "name": "@chatapp/shared",
+  "version": "1.0.0",
+  "private": "true",
+  "description": "",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc --project tsconfig.json && tsc-alias -p tsconfig.json --resolve-full-paths"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.30.1",
+  "dependencies": {
+    "pino": "^10.3.1",
+    "zod": "^4.3.6"
+  },
+  "devDependencies": {
+    "tsc-alias": "^1.8.16"
+  }
+}
