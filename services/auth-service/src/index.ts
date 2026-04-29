@@ -1,22 +1,44 @@
-import { createServer } from "http"
-import { CreateApp } from "./app"
-import { env } from "@/config/env"
-import { logger } from "./utils/logger"
+import { createServer } from "http";
+import { CreateApp } from "./app";
+import { env } from "@/config/env";
+import { logger } from "./utils/logger";
+import { closeDb, connectToDB } from "@/db/sequelize";
+import { initModels } from "./models";
 
 const main = async () => {
-    try {
-        const app = CreateApp()
-        const server = createServer(app)
+  try {
+    await connectToDB();
+    await initModels()
 
-        const port = env.AUTH_SERVICE_PORT
+    const app = CreateApp();
+    const server = createServer(app);
 
-        server.listen(port, () => {
-            logger.info({ port }, "Auth-Service is running")
+    const port = env.AUTH_SERVICE_PORT;
+
+    server.listen(port, () => {
+      logger.info({ port }, "Auth-Service is running");
+    });
+
+    const shutdown = () => {
+      logger.info("Auth-Service is shutting down");
+
+      Promise.all([
+        closeDb
+      ])
+        .catch((error: unknown) => {
+          logger.error({ error }, "Error during shutdown Auth-Service");
         })
-    } catch (error) {
-        logger.error({error}, "Failed to start Auth-Service")
-        process.exit(1)
-    }
-}
+        .finally(() => {
+          server.close(() => process.exit(0));
+        });
+    };
 
-main()
+    process.on("SIGINT", shutdown);
+    process.on("SIGTERM", shutdown);
+  } catch (error) {
+    logger.error({ error }, "Failed to start Auth-Service");
+    process.exit(1);
+  }
+};
+
+main();
