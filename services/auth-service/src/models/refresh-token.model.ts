@@ -1,6 +1,6 @@
-import { sequelize } from "@/db/sequelize";
 import { DataTypes, Model, type Optional } from "sequelize";
-import { UserCredentials } from "./user-credentials.model";
+import { sequelize } from "@/db/sequelize";
+import { UserCredentials } from "@/models/user-credentials.model";
 
 export interface RefreshTokenAttributes {
   id: string;
@@ -36,7 +36,7 @@ RefreshToken.init(
       defaultValue: DataTypes.UUIDV4,
     },
     userId: {
-      type: DataTypes.STRING,
+      type: DataTypes.UUID,
       allowNull: false,
     },
     tokenId: {

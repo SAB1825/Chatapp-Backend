@@ -1,5 +1,5 @@
-import { sequelize } from "@/db/sequelize";
 import { DataTypes, Model, type Optional } from "sequelize";
+import { sequelize } from "@/db/sequelize";
 
 export interface UserCredentialsAttributes {
   id: string;

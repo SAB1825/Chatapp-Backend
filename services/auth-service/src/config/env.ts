@@ -8,7 +8,10 @@ const envSchema = z.object({
     .default("development"),
   AUTH_SERVICE_PORT: z.coerce.number().int().min(0).max(65_535).default(4000),
   AUTH_DB_URL: z.url(),
-  // AUTH_DB_SSL: z.boolean(),
+  JWT_SECRET: z.string().min(10),
+  JWT_EXPIRES_IN: z.string().default("1d"),
+  JWT_REFRESH_SECRET: z.string().min(32),
+  JWT_REFRESH_EXPIRES_IN: z.string().default("30d"),
 });
 
 type EnvType = z.infer<typeof envSchema>;
