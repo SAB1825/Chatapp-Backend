@@ -2,9 +2,7 @@ import express, { Application } from "express";
 import cors from "cors";
 import helmet from "helmet";
 import { errorHandler } from "@/middleware/error-handler";
-import { registerRoutes } from "./routes/index.routes";
-import { createInternalAuthMiddleware } from "@chatapp/shared";
-import { env } from "./config/env";
+import { registerRoutes } from "./routes";
 
 export const CreateApp = (): Application => {
   const app = express();
@@ -18,9 +16,8 @@ export const CreateApp = (): Application => {
   );
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
-  app.use(createInternalAuthMiddleware(env.INTERNAL_AUTH_TOKEN));
 
-  registerRoutes(app);
+  registerRoutes(app)
 
   app.use((_req, res) => {
     res.status(404).json({ message: "Not Found" });
