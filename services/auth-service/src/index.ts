@@ -4,11 +4,13 @@ import { env } from "@/config/env";
 import { logger } from "./utils/logger";
 import { closeDb, connectToDB } from "@/db/sequelize";
 import { initModels } from "./models";
+import { closePublisher, initPublisher } from "@/messaging/event-publishing";
 
 const main = async () => {
   try {
     await connectToDB();
-    await initModels()
+    await initModels();
+    await initPublisher();
 
     const app = CreateApp();
     const server = createServer(app);
@@ -22,9 +24,7 @@ const main = async () => {
     const shutdown = () => {
       logger.info("Auth-Service is shutting down");
 
-      Promise.all([
-        closeDb
-      ])
+      Promise.all([closeDb(), closePublisher()])
         .catch((error: unknown) => {
           logger.error({ error }, "Error during shutdown Auth-Service");
         })
